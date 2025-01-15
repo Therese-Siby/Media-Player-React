@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <Navbar style={{zIndex:1}} className="bg-info position-fixed w-100">
-    <Container>
-      <Link to={'/'} style={{textDecoration:'none'}}>
+  <Container>
+    <Link to={'/'} style={{textDecoration:'none'}}>
       <Navbar.Brand style={{color:'white'}} className='fw-bolder'>
-      <i class="fa-solid fa-music me-3" ></i>
+        <i className="fa-solid fa-music me-3"></i> {/* Changed to className */}
         Media Player
-          
-          </Navbar.Brand>
-      </Link>
-      
-    </Container>
-  </Navbar>
+      </Navbar.Brand>
+    </Link>
+  </Container>
+</Navbar>
+
+
   )
 }
 
