@@ -9,7 +9,7 @@ const View = () => {
   const handleShow = () => setShow(true);
   return (
     <>
-      <Card style={{ width: '18rem' }} >
+      <Card style={{ width: '13rem' }} >
         <Card.Img onClick={handleShow} height={'180px'} variant="top" src="https://moviegalleri.net/wp-content/gallery/leo-tl/thumbs/thumbs_Actor-Vijay-Leo-Trailer-Launch-Poster-HD.jpg" />
         <Card.Body>
           <Card.Text className='d-flex justify-content-between'>
