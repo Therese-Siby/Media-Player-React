@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllHistoryAPI } from '../services/allAPI';
+import { getAllHistoryAPI,deleteHistoryAPI } from '../services/allAPI';
 
 const History = () => {
   const [allVideoHistory, setAllVideoHistory] = useState([]);
@@ -20,6 +20,18 @@ const History = () => {
       console.error('Error fetching history:', err);
     }
   };
+
+  const removeHistory = async (id) => {
+    try{
+      await deleteHistoryAPI(id)
+      getAllHistory()
+    }catch(err){
+      console.log(err);
+      
+    }
+  }
+
+
 
   return (
     <div style={{ paddingTop: '100px' }}>
@@ -50,7 +62,7 @@ const History = () => {
                 </td>
                 <td>{new Date(videoDetails?.timeStamp).toLocaleString()}</td>
                 <td>
-                  <button className="btn">
+                  <button onClick={()=> removeHistory(videoDetails?.id)} className="btn">
                     <i className="fa-solid fa-trash text-danger"></i>
                   </button>
                 </td>

@@ -23,3 +23,16 @@ export const saveHistoryAPI = async(historyDetails)=>{
 export const getAllHistoryAPI = async()=>{
     return await commonAPI(`GET`,`${SERVERURL}/history`,"")
 }
+
+
+// deleteHistoryAPI - delete method to http://localhost:3000/history/id called by history when clicked on delete button
+export const deleteHistoryAPI = async (id) => {
+    return await commonAPI(`DELETE` , `${SERVERURL}/history/${id}`,{})
+
+}
+
+// removeVideoAPI - delete method to http://localhost:3000/history/id called by history when clicked on delete button
+export const deleteHistoryAPI = async (id) => {
+    return await commonAPI(`DELETE` , `${SERVERURL}/history/${id}`,{})
+
+}
