@@ -4,7 +4,7 @@ import { Button, Modal, FloatingLabel, Form } from 'react-bootstrap';
 import { saveVideoAPI } from '../services/allAPI';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Add = () => {
+const Add = ({setAddResponseFromHome}) => {
 
   const [videoDetails, setVideoDetails] = useState({
     caption: "", imgUrl: "", youtubeLink: ""
@@ -36,6 +36,8 @@ const Add = () => {
       if(result.status>=200 && result.status<300){
         alert("video uploaded successfully.")
         handleClose()
+              // Pass the result to view component
+              setAddResponseFromHome(result)
       }else{
         console.log(result);
         

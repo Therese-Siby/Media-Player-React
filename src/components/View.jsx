@@ -3,13 +3,13 @@ import { Row, Col } from 'react-bootstrap'
 import VideoCard from './VideoCard'
 import { getAllVideosAPI } from '../services/allAPI'
 
-const View = () => {
+const View = ({addResponseFromHome}) => {
 
   const [allVideos, setAllVideos] = useState([])
 
   useEffect(() => {
     getAllVideos()
-  }, [])
+  }, [addResponseFromHome])
   console.log(allVideos);
 
   

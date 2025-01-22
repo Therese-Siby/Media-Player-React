@@ -13,3 +13,13 @@ export const saveVideoAPI = async(videoDetails)=>{
 export const getAllVideosAPI = async()=>{
     return await commonAPI(`GET`,`${SERVERURL}/uploadVideos`,"")
 }
+
+// saveHistoryAPI - POST http method to http://localhost:3000/history called by VideoCard while when we click on video
+export const saveHistoryAPI = async(historyDetails)=>{
+    return await commonAPI(`POST` , `${SERVERURL}/history`, historyDetails)
+}
+
+// getAllHistoryAPI - get http method to http://localhost:3000/history called by history component when it open in browser
+export const getAllHistoryAPI = async()=>{
+    return await commonAPI(`GET`,`${SERVERURL}/history`,"")
+}

@@ -1,14 +1,33 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getAllHistoryAPI } from '../services/allAPI';
 
 const History = () => {
+  const [allVideoHistory, setAllVideoHistory] = useState([]);
+
+  useEffect(() => {
+    getAllHistory();
+  }, []);
+
+  const getAllHistory = async () => {
+    try {
+      const result = await getAllHistoryAPI();
+      if (result.status >= 200 && result.status < 300) {
+        // Update state with the fetched history
+        setAllVideoHistory(result.data);
+      }
+    } catch (err) {
+      console.error('Error fetching history:', err);
+    }
+  };
+
   return (
     <div style={{ paddingTop: '100px' }}>
-      <div className='d-flex justify-content-between container'>
+      <div className="d-flex justify-content-between container">
         <h3>Watch History</h3>
         <Link to={'/home'}>Back to Home</Link>
       </div>
-      <table className='container my-5 table'>
+      <table className="container my-5 table">
         <thead>
           <tr>
             <th>#</th>
@@ -19,17 +38,35 @@ const History = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Caption</td>
-            <td>https://www.youtube.com/watch?v=Po3jStA673E</td>
-            <td>9/11/2024, 11:53:20 AM, GMT+5:30</td>
-            <td><i className="fa-solid fa-trash text-danger"></i></td> {/* Changed to className */}
-          </tr>
+          {allVideoHistory?.length > 0 ? (
+            allVideoHistory.map((videoDetails, index) => (
+              <tr key={videoDetails?.id || index}>
+                <td>{index + 1}</td>
+                <td>{videoDetails?.caption}</td>
+                <td>
+                  <a href={videoDetails?.youtubeLink} target="_blank" rel="noopener noreferrer">
+                    {videoDetails?.youtubeLink}
+                  </a>
+                </td>
+                <td>{new Date(videoDetails?.timeStamp).toLocaleString()}</td>
+                <td>
+                  <button className="btn">
+                    <i className="fa-solid fa-trash text-danger"></i>
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="fw-bolder text-danger text-center">
+                You didn't watch any videos yet!!!
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default History
+export default History;
