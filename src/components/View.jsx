@@ -5,11 +5,12 @@ import { getAllVideosAPI } from '../services/allAPI'
 
 const View = ({addResponseFromHome}) => {
 
+  const [deleteVideoResponseFromVideoCard,setdeleteVideoResponseFromVideoCard] = useState("")
   const [allVideos, setAllVideos] = useState([])
 
   useEffect(() => {
     getAllVideos()
-  }, [addResponseFromHome])
+  }, [addResponseFromHome,deleteVideoResponseFromVideoCard])
   console.log(allVideos);
 
   
@@ -40,7 +41,10 @@ const View = ({addResponseFromHome}) => {
           allVideos?.length>0?
           allVideos.map(video=>(
             <Col key={video?.id} className='mb-2' sm={12} md={6} lg={4}>
-          <VideoCard displayData={video} />
+<VideoCard
+  setdeleteVideoResponseFromVideoCard={setdeleteVideoResponseFromVideoCard}
+  displayData={video}
+/>
         </Col>
           ))
           :

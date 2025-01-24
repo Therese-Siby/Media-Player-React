@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Card, Modal } from 'react-bootstrap';
-import { saveHistoryAPI } from '../services/allAPI';
+import { removeVideoAPI, saveHistoryAPI } from '../services/allAPI';
 
-const View = ({ displayData }) => {
+const VideoCard = ({ displayData,setdeleteVideoResponseFromVideoCard }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -24,6 +24,15 @@ const View = ({ displayData }) => {
     }
 
   }
+    const deleteVideo = async (id) => {
+      try{
+        const result = await removeVideoAPI(id)
+        setdeleteVideoResponseFromVideoCard(result)
+      }catch(err){
+        console.log(err);
+        
+      }
+    }
 
   return (
     <>
@@ -40,7 +49,7 @@ const View = ({ displayData }) => {
           {/* Card Text */}
           <Card.Text className="d-flex justify-content-between align-items-center">
             <span style={{ color: 'white' }}>{displayData?.caption || 'No Title'}</span>
-            <button className="btn">
+            <button onClick={()=>deleteVideo(displayData?.id)} className="btn">
               <i className="fa-solid fa-trash text-danger"></i>
             </button>
           </Card.Text>
@@ -70,4 +79,4 @@ const View = ({ displayData }) => {
   );
 };
 
-export default View;
+export default VideoCard;
