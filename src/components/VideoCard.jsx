@@ -34,14 +34,18 @@ const VideoCard = ({ displayData,setdeleteVideoResponseFromVideoCard }) => {
       }
     }
 
+
+    const videoCardDragStarted = (e, dragVideoDetails) => {
+      console.log("Dragging video with ID: ", dragVideoDetails?.id);
+       // Share data using event drag start
+      e.dataTransfer.setData("videoDetails", JSON.stringify(dragVideoDetails)); // Store video details as string
+    };
   return (
     <>
-      <Card style={{ width: '13rem' }}>
+      <Card draggable={true} onDragStart={e=>videoCardDragStarted(e,displayData)} style={{ width: '13rem' }}>
         {/* Card Image */}
         <Card.Img
-          onClick={handleShow}
-          height="180px"
-          variant="top"
+          onClick={handleShow}height="180px" variant="top"
           src={displayData?.imgUrl}
           alt={displayData?.caption || 'Video Thumbnail'}
         />

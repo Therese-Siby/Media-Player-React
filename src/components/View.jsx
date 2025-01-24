@@ -3,15 +3,15 @@ import { Row, Col } from 'react-bootstrap'
 import VideoCard from './VideoCard'
 import { getAllVideosAPI } from '../services/allAPI'
 
-const View = ({addResponseFromHome}) => {
+const View = ({addResponseFromHome,deleteResponseFromCategory}) => {
 
   const [deleteVideoResponseFromVideoCard,setdeleteVideoResponseFromVideoCard] = useState("")
   const [allVideos, setAllVideos] = useState([])
 
   useEffect(() => {
-    getAllVideos()
-  }, [addResponseFromHome,deleteVideoResponseFromVideoCard])
-  console.log(allVideos);
+    getAllVideos();
+  }, [addResponseFromHome, deleteResponseFromCategory, deleteVideoResponseFromVideoCard]); // Dependency array
+  
 
   
 

@@ -5,6 +5,7 @@ import View from '../components/View'
 import Category from '../components/Category'
 
 const Home = () => {
+  const [deleteResponseFromCategory,setDeleteResponseFromCategory] =  useState("")
 const [addResponseFromHome, setAddResponseFromHome] = useState("")
 
   return (
@@ -16,10 +17,10 @@ const [addResponseFromHome, setAddResponseFromHome] = useState("")
       <div className='container-fluid my-5 row'>
         <div className="col-lg-6">
           <h3>All videos</h3>
-          <View addResponseFromHome = {addResponseFromHome}/>
+          <View deleteResponseFromCategory={deleteResponseFromCategory} addResponseFromHome = {addResponseFromHome}/>
         </div>
         <div className="col-lg-6">
-          <Category />
+          <Category setdeleteVideoResponseFromVideoCard = {setDeleteResponseFromCategory}/>
         </div>
       </div>
     </div>

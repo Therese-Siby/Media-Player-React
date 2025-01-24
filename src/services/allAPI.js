@@ -49,9 +49,14 @@ export const getAllCategoryAPI = async()=>{
 }
 
 
-// deleteCategoryAPI - delete method to http://localhost:3000/history/id called by history when clicked on delete button
+// deleteCategoryAPI - delete method to http://localhost:3000/history/id called by category when clicked on delete button
 export const deleteCategoryAPI = async (id) => {
     return await commonAPI(`DELETE` , `${SERVERURL}/categories/${id}`,{})
 
 }
 
+// updateCategoryAPI - put method to http://localhost:3000/history/id called by categ when video drop over the category
+export const updateCategoryAPI = async (categoryDetails) => {
+    return await commonAPI(`PUT` , `${SERVERURL}/categories/${categoryDetails.id}`,categoryDetails)
+
+}

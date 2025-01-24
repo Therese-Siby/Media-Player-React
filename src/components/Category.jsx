@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap'
-import { deleteCategoryAPI, getAllCategoryAPI, saveCategoryAPI } from '../services/allAPI';
+import { deleteCategoryAPI, getAllCategoryAPI, removeVideoAPI, saveCategoryAPI, updateCategoryAPI } from '../services/allAPI';
+import VideoCard from './VideoCard';
 
-const Category = () => {
+const Category = ({setDeleteResponseFromCategory}) => {
   const [allCategories, setAllCategories] = useState([])
   const [CategoryName, setCategoryName] = useState("")
   const [show, setShow] = useState(false);
@@ -53,6 +54,31 @@ const Category = () => {
         
       }
 }
+const dragOverCategory =(e) =>{
+  e.preventDefault()
+}
+
+const VideoCardDropOverCategory = async (e, categoryDetails) => {
+  console.log("Inside videoCardDropOverCategory");
+  const videoDetails = JSON.parse(e.dataTransfer.getData("videoDetails")); // Retrieve video details
+  console.log(videoDetails);
+
+  // Update category by adding video to its allVideos
+  categoryDetails.allVideos.push(videoDetails);
+  console.log(categoryDetails);
+
+  // API call to update the category
+  await updateCategoryAPI(categoryDetails);
+  getAllCategories();
+
+  // Remove the video from "All Videos"
+  const result = await removeVideoAPI(videoDetails?.id);
+  setDeleteResponseFromCategory(result);
+
+  // **Force re-fetch updated videos in View**
+  window.location.reload(); // or trigger a re-render of the `View` component by updating state
+};
+
   return (
     <>
       <div className='d-flex justify-content-between align-items-center'>
@@ -65,7 +91,7 @@ const Category = () => {
         {
           allCategories?.length ?
             allCategories?.map(categoryDetails => (
-              <div key={categoryDetails?.id} className='border rounded p-3 mb-3'>
+              <div droppable="true "onDragOver={dragOverCategory} onDrop={e=>VideoCardDropOverCategory(e,categoryDetails)} key={categoryDetails?.id} className='border rounded p-3 mb-3'>
                 <div className='d-flex justify-content-between'>
 
                   <h5>{categoryDetails?.CategoryName}</h5>
