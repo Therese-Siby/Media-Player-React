@@ -3,7 +3,7 @@ import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap'
 import { deleteCategoryAPI, getAllCategoryAPI, removeVideoAPI, saveCategoryAPI, updateCategoryAPI } from '../services/allAPI';
 import VideoCard from './VideoCard';
 
-const Category = ({setDeleteResponseFromCategory}) => {
+const Category = ({ setDeleteResponseFromCategory ,deleteResponseFromView}) => {
   const [allCategories, setAllCategories] = useState([])
   const [CategoryName, setCategoryName] = useState("")
   const [show, setShow] = useState(false);
@@ -14,7 +14,7 @@ const Category = ({setDeleteResponseFromCategory}) => {
 
   useEffect(() => {
     getAllCategories()
-  }, [])
+  }, [deleteResponseFromView])
   const handleSaveCateGory = async () => {
     if (CategoryName) {
       const categoryDetails = { CategoryName, allVideos: [] }
@@ -45,40 +45,41 @@ const Category = ({setDeleteResponseFromCategory}) => {
     }
   }
   console.log(allCategories);
-  const removeCategory = async (id)=>{
-      try {
-        await deleteCategoryAPI (id)
-        getAllCategories()
-      } catch (err) {
-       console.log(err);
-        
-      }
-}
-const dragOverCategory =(e) =>{
-  e.preventDefault()
-}
+  const removeCategory = async (id) => {
+    try {
+      await deleteCategoryAPI(id)
+      getAllCategories()
+    } catch (err) {
+      console.log(err);
 
-const VideoCardDropOverCategory = async (e, categoryDetails) => {
-  console.log("Inside videoCardDropOverCategory");
-  const videoDetails = JSON.parse(e.dataTransfer.getData("videoDetails")); // Retrieve video details
-  console.log(videoDetails);
+    }
+  }
+  const dragOverCategory = (e) => {
+    e.preventDefault()
+  }
 
-  // Update category by adding video to its allVideos
-  categoryDetails.allVideos.push(videoDetails);
-  console.log(categoryDetails);
+  const VideoCardDropOverCategory = async (e, categoryDetails) => {
+    console.log("Inside videoCardDropOverCategory");
+    const videoDetails = JSON.parse(e.dataTransfer.getData("videoDetails")); // Retrieve video details
+    console.log(videoDetails);
+    // Update category by add video to its allVideos
+    categoryDetails.allVideos.push(videoDetails)
+    console.log(categoryDetails);
+    // Api call to update the category
+    await updateCategoryAPI(categoryDetails)
+    getAllCategories()
 
-  // API call to update the category
-  await updateCategoryAPI(categoryDetails);
-  getAllCategories();
-
-  // Remove the video from "All Videos"
-  const result = await removeVideoAPI(videoDetails?.id);
-  setDeleteResponseFromCategory(result);
-
-  // **Force re-fetch updated videos in View**
-  window.location.reload(); // or trigger a re-render of the `View` component by updating state
-};
-
+    // Remove the video from "All Videos"
+    const result = await removeVideoAPI(videoDetails?.id)
+    if (result.status >= 200 && result.status < 300) {
+      setDeleteResponseFromCategory(result); // Ensure this triggers re-fetch in View component
+    }
+  };
+  const categoryVideoDragstarted = (e, dragVideoDetails, categoryDetails) => {
+    console.log("Inside categoryVideoDragstarted");
+    let dragData = { video: dragVideoDetails, categoryDetails }
+    e.dataTransfer.setData("dragData", JSON.stringify(dragData))
+  }
   return (
     <>
       <div className='d-flex justify-content-between align-items-center'>
@@ -91,19 +92,31 @@ const VideoCardDropOverCategory = async (e, categoryDetails) => {
         {
           allCategories?.length ?
             allCategories?.map(categoryDetails => (
-              <div droppable="true "onDragOver={dragOverCategory} onDrop={e=>VideoCardDropOverCategory(e,categoryDetails)} key={categoryDetails?.id} className='border rounded p-3 mb-3'>
+              <div droppable="true " onDragOver={dragOverCategory} onDrop={e => VideoCardDropOverCategory(e, categoryDetails)} key={categoryDetails?.id} className='border rounded p-3 mb-3'>
                 <div className='d-flex justify-content-between'>
 
                   <h5>{categoryDetails?.CategoryName}</h5>
-                  <button onClick={()=>removeCategory(categoryDetails?.id)} className="btn">
+                  <button onClick={() => removeCategory(categoryDetails?.id)} className="btn">
                     <i className="fa-solid fa-trash text-danger"></i>
                   </button>
                 </div>
                 {/* Display categories video */}
                 <div className='row mt-2'>
-                  <div className='col-lg-4'>
-                    {/* Video Cards */}
-                  </div>
+                  {
+                    categoryDetails?.allVideos?.length > 0 &&
+                    categoryDetails?.allVideos?.map(video => (
+                      <div
+                        key={video?.id}
+                        className="col-lg-4"
+                        draggable={true}
+                        onDragStart={(e) => categoryVideoDragstarted(e, video, categoryDetails)}
+                      >
+                        <VideoCard insideCategory={true} displayData={video} />
+                      </div>
+
+                    ))
+                  }
+
                 </div>
               </div>
 
